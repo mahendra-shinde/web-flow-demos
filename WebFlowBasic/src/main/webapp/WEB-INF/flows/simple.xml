@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+<!--  Simple DUMMY Flow, No logic just views!! -->
+	<view-state id="start" view="page1">
+		<transition on="next" to="page2"  />
+	</view-state>
+	
+	<view-state id="page2" view="page2">
+		<transition on="next" to="page3" />
+		<transition on="previous" to="start" />
+	</view-state>
+	
+	<view-state id="page3" view="page3">
+		<transition on="next" to="finish" />
+		<transition on="previous" to="page2" />		
+	</view-state>
+
+	<end-state id="finish" view="end" />
+</flow>

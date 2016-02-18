@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:webflow-config="http://www.springframework.org/schema/webflow-config"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		http://www.springframework.org/schema/webflow-config http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.4.xsd">
+	
+	
+	<context:component-scan base-package="com.mahendra.swf"/>
+	<mvc:annotation-driven/>
+	<webflow-config:flow-executor id="executor" flow-registry="registry" />
+	
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+		<property name="prefix" value="/WEB-INF/pages/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+	
+	<webflow-config:flow-registry id="registry" flow-builder-services="builder">
+		<webflow-config:flow-location path="/WEB-INF/flows/simple.xml"/>
+	</webflow-config:flow-registry>
+	
+
+ 	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter">
+    	<property name="flowExecutor" ref="executor" />
+	</bean>
+	
+	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping">
+    	<property name="flowRegistry" ref="registry" />
+     	<property name="order" value="0"/>
+	</bean>
+	
+	<webflow-config:flow-builder-services id="builder" view-factory-creator="factoryCreator"/>
+	
+	<bean id="factoryCreator" class="org.springframework.webflow.mvc.builder.MvcViewFactoryCreator">
+		<property name="viewResolvers">
+			<list>
+				<ref bean="viewResolver"/>
+			</list>
+		</property>
+	</bean>
+	
+</beans>
