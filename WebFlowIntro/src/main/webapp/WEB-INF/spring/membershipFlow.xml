@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+<!-- Executed when webFlow is triggered.  It needs Apache Tomcat 7. -->
+	<on-start>
+	<!-- demohandler is java class available through annotated Demohandler.java class.here we are calling it’s initFlow() method. -->
+	<!--  The scope is where userBean will be registered. The 'userBean' is the name with which bean will be registered on scope -->
+	  <evaluate expression="demoHandler.initFlow()" result="flowScope.userBean"/>
+	</on-start>
+	 <!-- if not specified the first view state is the starting state -->
+	 <!-- The view name is used by Resolver to identify .jsp view.  The Model is the data model -->
+	 <!-- The 'on' is an event linked with next step as 'validate' -->
+	<view-state id="start" view="memberDetails" model="flowScope.userBean">
+	   <transition on="submit" to="validate"/>
+	</view-state>
+	
+	<!--  -->
+	<action-state id="validate">
+		<evaluate expression="demoHandler.validateDetails(userBean,messageContext)"></evaluate>
+		<transition on="success" to="confirmDetails" />
+		<transition on="failure" to="start" />
+	</action-state>
+	
+	<view-state id="confirmDetails" view="confirmDetails" model="flowScope.userBean">
+		<transition on="edit" to="start" />
+		<transition on="submit" to="welcome" />
+	</view-state>
+ 
+	<end-state id="welcome" view="welcome" />
+	<end-state id="toHome" view="externalRedirect:contextRelative:home.jsp" />
+	<end-state id="toException" view="externalRedirect:contextRelative:exception.jsp" />
+	
+	<!-- these events are available in every state-->
+	<global-transitions>
+		<transition on="home" to="toHome" />
+		<transition on="error" to="toException" />
+	</global-transitions>
+</flow>
